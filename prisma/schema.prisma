@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Room {
+  id            String          @id @default(cuid())
+  name          String
+  description   String          @db.Text
+  image         String
+  price         Int
+  Capacity      Int             @default(1)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  RoomAmenities RoomAmenities[]
+  Reservation   Reservation[]
+  
+  @@map("rooms")
+}
+
+model Amenities {
+  id            String          @id @default(cuid())
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  RoomAmenities RoomAmenities[]
+
+  @@map("amenities")
+}
+
+model RoomAmenities {
+  id          String   @id @default(cuid())
+  roomId      String
+  amenitiesId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Room      Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  Amenities Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, amenitiesId])
+  @@map("room_amenities")
+}
+
+model Reservation {
+  id        String    @id @default(cuid())
+  roomId    String
+  userId    String
+  startDate DateTime
+  endDate   DateTime
+  price     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Payment   payment[] 
+
+  Room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reservations")
+}
+
+model payment {
+  id            String   @id @default(cuid())
+  method        String
+  reservationId String
+  amount        Int
+  status        String   @default("unpaid")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  Reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?     @map("email_verified")
+  image         String?
+  role          String        @default("user")
+  phone         String?
+  accounts      Account[]
+  Reservation   Reservation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
