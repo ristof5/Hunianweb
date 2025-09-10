@@ -1,7 +1,8 @@
 "use client";
 
 import { Amenities } from "@/app/generated/prisma";
-import { saveRoom } from "@/lib/actions";
+import { updateRoom } from "@/lib/actions";
+import { RoomProps } from "@/types/room";
 import { type PutBlobResult } from "@vercel/blob";
 import clsx from "clsx";
 import Image from "next/image";
@@ -10,9 +11,15 @@ import { useActionState } from "react";
 import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
 import { BarLoader } from "react-spinners";
 
-const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
+const EditForm = ({
+  amenities,
+  room,
+}: {
+  amenities: Amenities[];
+  room: RoomProps;
+}) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(room.image);
   const [message, setMessage] = useState("");
   const [pending, startTransition] = useTransition();
 
@@ -56,32 +63,33 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
   };
 
   const [state, formAction, isPending] = useActionState(
-    saveRoom.bind(null, image),
+    updateRoom.bind(null, image, room.id),
     null
   );
-// form action harus di tetapkan sama dengan variabel yang dibuat
+  const checkedAmenities = room.RoomAmenities.map((item) => item.amenitiesId);
+  // form action harus di tetapkan sama dengan variabel yang dibuat
   return (
-    <form action={formAction}> 
+    <form action={formAction}>
       <div className="grid md:grid-cols-12 gap-5">
         <div className="col-span-8 bg-white p-4">
-            <div className="mb-4">
+          <div className="mb-4">
             <input
               type="text"
               name="name"
-              defaultValue={typeof state?.values?.name === "string" ? state.values.name : ""} //default value untuk menahan progress mengisi value
+              defaultValue={room.name}
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Room Name..."
             />
             <div aria-live="polite" aria-atomic="true">
               <span className="text-sm text-red-500 mt-2">
-              {state?.error?.name}
+                {state?.error?.name}
               </span>
             </div>
-            </div>
+          </div>
           <div className="mb-4">
             <textarea
               name="description"
-              defaultValue={typeof state?.values?.description === "string" ? state.values.description : ""}
+              defaultValue={room.description}
               rows={8}
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Description"
@@ -99,6 +107,7 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
                   type="checkbox"
                   name="amenities"
                   defaultValue={item.id}
+                  defaultChecked={checkedAmenities.includes(item.id)}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded placeholder-gray-500"
                   placeholder="Amenities"
                 />
@@ -172,7 +181,7 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
             <input
               type="text"
               name="capacity"
-              defaultValue={typeof state?.values?.capacity === "string" ? state.values.capacity : ""}
+              defaultValue={room.Capacity}
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Capacity.."
             />
@@ -186,7 +195,7 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
             <input
               type="text"
               name="price"
-              defaultValue={typeof state?.values?.capacity === "string" ? state.values.capacity : ""}
+              defaultValue={room.price}
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Price.."
             />
@@ -214,7 +223,7 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
             )}
             disabled={isPending}
           >
-            {isPending ? "Saving..." : "Save"}
+            {isPending ? "Updating..." : "Update"}
           </button>
         </div>
       </div>
@@ -222,4 +231,4 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
   );
 };
 
-export default CreateForm;
+export default EditForm;
