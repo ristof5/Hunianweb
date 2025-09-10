@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
+// fungsi create room
 export const saveRoom = async (
   image: string,
   prevState: unknown,

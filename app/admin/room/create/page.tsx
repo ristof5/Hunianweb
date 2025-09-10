@@ -1,4 +1,10 @@
 import CreateRoom from "@/components/admin/room/create-room";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Create Room & Property - Hunian',
+    
+}
 
 const CreateRoomPage = () => {
   return (

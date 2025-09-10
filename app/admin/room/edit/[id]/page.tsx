@@ -1,8 +1,14 @@
 import EditRoom from "@/components/admin/room/edit-room";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-const UpdateRoomPage = async ({ params }: { params: { id: string } }) => {
+export const metadata: Metadata = {
+    title: 'Update Room & Property - Hunian',
+    
+}
+
+const UpdateRoomPage = ({ params }: { params: { id: string } }) => {
   const roomId = params.id;
 
   if (!roomId) return notFound();

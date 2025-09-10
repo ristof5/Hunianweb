@@ -1,6 +1,12 @@
 import RoomTable from "@/components/admin/room/room-table";
+import { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";
+
+export const metadata: Metadata = {
+    title: 'Manage Room & Property - Hunian',
+    
+}
 
 const RoomPage = () => {
   return (
