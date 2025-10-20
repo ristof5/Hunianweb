@@ -10,7 +10,13 @@ import { useActionState } from "react";
 import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
 import { BarLoader } from "react-spinners";
 
-const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
+const CreateForm = ({
+  amenities,
+  categories,
+}: {
+  amenities: Amenities[];
+  categories: { id: string; name: string }[];
+}) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
@@ -59,29 +65,35 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
     saveRoom.bind(null, image),
     null
   );
-// form action harus di tetapkan sama dengan variabel yang dibuat
+  // form action harus di tetapkan sama dengan variabel yang dibuat
   return (
-    <form action={formAction}> 
+    <form action={formAction}>
       <div className="grid md:grid-cols-12 gap-5">
         <div className="col-span-8 bg-white p-4">
-            <div className="mb-4">
+          <div className="mb-4">
             <input
               type="text"
               name="name"
-              defaultValue={typeof state?.values?.name === "string" ? state.values.name : ""} //default value untuk menahan progress mengisi value
+              defaultValue={
+                typeof state?.values?.name === "string" ? state.values.name : ""
+              } //default value untuk menahan progress mengisi value
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Room Name..."
             />
             <div aria-live="polite" aria-atomic="true">
               <span className="text-sm text-red-500 mt-2">
-              {state?.error?.name}
+                {state?.error?.name}
               </span>
             </div>
-            </div>
+          </div>
           <div className="mb-4">
             <textarea
               name="description"
-              defaultValue={typeof state?.values?.description === "string" ? state.values.description : ""}
+              defaultValue={
+                typeof state?.values?.description === "string"
+                  ? state.values.description
+                  : ""
+              }
               rows={8}
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Description"
@@ -172,7 +184,11 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
             <input
               type="text"
               name="capacity"
-              defaultValue={typeof state?.values?.capacity === "string" ? state.values.capacity : ""}
+              defaultValue={
+                typeof state?.values?.capacity === "string"
+                  ? state.values.capacity
+                  : ""
+              }
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Capacity.."
             />
@@ -183,10 +199,45 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
             </div>
           </div>
           <div className="mb-4">
+            <label
+              htmlFor="categoryId"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Category
+            </label>
+            <select
+              id="categoryId"
+              name="categoryId"
+              defaultValue={
+                typeof state?.values?.categoryId === "string"
+                  ? state.values.categoryId
+                  : ""
+              }
+              className="py-2 px-4 rounded-sm border border-gray-500 w-full text-gray-900"
+            >
+              <option value="">-- Select Category --</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <div aria-live="polite" aria-atomic="true">
+              <span className="text-sm text-red-500 mt-2">
+                {state?.error?.categoryId}
+              </span>
+            </div>
+          </div>
+
+          <div className="mb-4">
             <input
               type="text"
               name="price"
-              defaultValue={typeof state?.values?.capacity === "string" ? state.values.capacity : ""}
+              defaultValue={
+                typeof state?.values?.capacity === "string"
+                  ? state.values.capacity
+                  : ""
+              }
               className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
               placeholder="Price.."
             />

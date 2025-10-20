@@ -15,14 +15,24 @@ model Room {
   description   String
   image         String
   price         Int
-  Capacity      Int             @default(1)
+  Capacity      Int             @default(1)   // ⚠️ lebih konsisten lowercase
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Reservation   Reservation[]
   RoomAmenities RoomAmenities[]
 
+  categoryId    String?
+  category      Category?       @relation(fields: [categoryId], references: [id])
+
   @@map("rooms")
 }
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  rooms Room[]
+}
+
 
 model Amenities {
   id            String          @id @default(cuid())
@@ -65,7 +75,7 @@ model Reservation {
 
 model payment {
   id            String      @id @default(cuid())
-  method        String
+  method        String?
   reservationId String
   amount        Int
   status        String      @default("unpaid")

@@ -10,7 +10,7 @@ import { IoPeopleOutline } from "react-icons/io5";
 }
 const card = ({ room }: { room: Room }) => {
   return (
-    <div className="bg-white shadow-lg rounded-sm transition duration-100 hover:shadow-sm">
+    <div className="bg-white shadow-lg rounded-sm transition duration-100 hover:shadow-sm text-gray-800">
       <div className="h-[260px] w-auto rounded-t-sm relative">
         <Image
           src={room.image}
@@ -37,7 +37,7 @@ const card = ({ room }: { room: Room }) => {
           <span className="text-gray-400 text-sm">/night</span>
         </h4>
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-gray-400">
+          <div className="flex items-center space-x-2 text-gray-800">
             <IoPeopleOutline />
             <span>
               {room.Capacity} {room.Capacity === 1 ? "person" : "people"}

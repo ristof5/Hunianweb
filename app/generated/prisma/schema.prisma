@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Room {
+  id            String          @id @default(cuid())
+  name          String
+  description   String
+  image         String
+  price         Int
+  Capacity      Int             @default(1) // ⚠️ lebih konsisten lowercase
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Reservation   Reservation[]
+  RoomAmenities RoomAmenities[]
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("rooms")
+}
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  rooms Room[]
+}
+
+model Amenities {
+  id            String          @id @default(cuid())
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  RoomAmenities RoomAmenities[]
+
+  @@map("amenities")
+}
+
+model RoomAmenities {
+  id          String    @id @default(cuid())
+  roomId      String
+  amenitiesId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Amenities   Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
+  Room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, amenitiesId])
+  @@map("room_amenities")
+}
+
+model Reservation {
+  id        String    @id @default(cuid())
+  roomId    String
+  userId    String
+  startDate DateTime
+  endDate   DateTime
+  price     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Payment   payment[]
+  Room      Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reservations")
+}
+
+model payment {
+  id            String      @id @default(cuid())
+  method        String?
+  reservationId String
+  amount        Int
+  status        String      @default("unpaid")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  Reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?     @map("email_verified")
+  image         String?
+  role          String        @default("user")
+  phone         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  accounts      Account[]
+  Reservation   Reservation[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

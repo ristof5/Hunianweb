@@ -1,43 +1,109 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Node / JavaScript
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+.pnpm-store/
+.env.local
+.env.*.local
+.env
+!.env.example
+.npmrc
+package-lock.json
+.pnp.*
+.cache/
 
-# env files (can opt-in for committing if needed)
-.env*
+# Next.js build output
+.next/
+.next/cache
+out/
+build/
+.next/static/
 
-# vercel
-.vercel
+# Vercel / Now
+.vercel/
+.vercel/output/
+.now
+.now.sh
 
-# typescript
+# Prisma
+prisma/.env
+# generated Prisma client artifacts
+node_modules/.prisma/
+.prisma/
+prisma/client/
+
+# Database files (local/dev)
+*.sqlite
+*.db
+*.sqlite3
+*.sql
+pgdata/
+postgres-data/
+*.dump
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+docker-compose.yml
+.docker/
+**/docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+/logs
+*.log.*
+pids/
+*.pid
+*.seed
+
+# Testing / coverage
+coverage/
+.nyc_output/
+jest-coverage/
+playwright-report/
+test-results/
+
+# Build / transpile output
+dist/
+build/
+tmp/
+temp/
+out-tsc/
+
+# TypeScript
 *.tsbuildinfo
-next-env.d.ts
 
-/app/generated/prisma
+# Editor / OS files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+.DS_Store
+Thumbs.db
+
+# Misc caches and tooling
+.cache/
+*.local
+.env.test
+.eslintcache
+.storybook/
+storybook-static/
+.sass-cache
+*.pem
+
+# Security / keys
+*.key
+*.crt
+*.p12
+*.jks
+
+# Ignore IDE-specific and OS files (catch-all)
+*.swp
+*~

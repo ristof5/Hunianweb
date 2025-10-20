@@ -16,7 +16,19 @@ export const RoomSchema = object({
 
   amenities: array(string()).nonempty({
     message: "At least one amenity must be selected.",
+
   }),
+  categoryId: string().min(1, { message: "Category is required." }),
+});
+
+// validation schema room dengan pesan error custom
+export const ReserveSchema = object({
+  name: string().min(1, { message: "Room name is required." }),
+
+  phone: string().min(10, {
+    message: "PhoneNumber must be at least 10 characters long.",
+  }),
+
 });
 
 //validation schema contact form

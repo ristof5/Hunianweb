@@ -13,9 +13,11 @@ import { BarLoader } from "react-spinners";
 
 const EditForm = ({
   amenities,
+  categories,
   room,
 }: {
   amenities: Amenities[];
+  categories: { id: string; name: string }[];
   room: RoomProps;
 }) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -41,10 +43,8 @@ const EditForm = ({
         }
         const img = data as PutBlobResult;
         setImage(img.url);
-        // setMessage("Upload berhasil ✅");
       } catch (error) {
         console.log(error);
-        // setMessage("Terjadi error saat upload");
       }
     });
   };
@@ -67,39 +67,40 @@ const EditForm = ({
     null
   );
   const checkedAmenities = room.RoomAmenities.map((item) => item.amenitiesId);
-  // form action harus di tetapkan sama dengan variabel yang dibuat
+
   return (
     <form action={formAction}>
       <div className="grid md:grid-cols-12 gap-5">
         <div className="col-span-8 bg-white p-4">
+          {/* Room Name */}
           <div className="mb-4">
             <input
               type="text"
               name="name"
               defaultValue={room.name}
-              className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
+              className="py-2 px-4 rounded-sm border border-gray-500 w-full text-gray-900"
               placeholder="Room Name..."
             />
-            <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">
-                {state?.error?.name}
-              </span>
-            </div>
+            <span className="text-sm text-red-500 mt-2">
+              {state?.error?.name}
+            </span>
           </div>
+
+          {/* Description */}
           <div className="mb-4">
             <textarea
               name="description"
               defaultValue={room.description}
               rows={8}
-              className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
+              className="py-2 px-4 rounded-sm border border-gray-500 w-full text-gray-900"
               placeholder="Description"
             ></textarea>
-            <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">
-                {state?.error?.description}
-              </span>
-            </div>
+            <span className="text-sm text-red-500 mt-2">
+              {state?.error?.description}
+            </span>
           </div>
+
+          {/* Amenities */}
           <div className="mb-4 grid md:grid-cols-3">
             {amenities.map((item) => (
               <div className="flex items-center mb-4" key={item.id}>
@@ -108,28 +109,28 @@ const EditForm = ({
                   name="amenities"
                   defaultValue={item.id}
                   defaultChecked={checkedAmenities.includes(item.id)}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded placeholder-gray-500"
-                  placeholder="Amenities"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded "
                 />
                 <label className="ms-2 text-sm font-medium text-gray-900 capitalize">
                   {item.name}
                 </label>
               </div>
             ))}
-            <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">
-                {state?.error?.amenities}
-              </span>
-            </div>
+            <span className="text-sm text-red-500 mt-2">
+              {state?.error?.amenities}
+            </span>
           </div>
         </div>
+
+        {/* Image & Other Fields */}
         <div className="col-span-4 bg-white p-4">
+          {/* Upload image */}
           <label
             htmlFor="input-file"
             className="flex flex-col mb-4 items-center justify-center aspect-video border-2 border-gray-300
-            border-dashed rounded-md cursor-pointer bg-gray-50 relative "
+            border-dashed rounded-md cursor-pointer bg-gray-50 relative text-gray-900 "
           >
-            <div className="flex flex-col items-center justify-center text-gray-500 pt-5 pb-6 z-10">
+            <div className="flex flex-col items-center justify-center text-gray-900 pt-5 pb-6 z-10 ">
               {pending ? <BarLoader /> : null}
               {/* kondisi image */}
               {image ? (
@@ -145,19 +146,17 @@ const EditForm = ({
                 <div className="flex flex-col items items-center justify-center">
                   <IoCloudUploadOutline className="size-8" />
                   <p className="mb-1 text-sm font-bold">Select image</p>
-                  {/*kondisi message*/}
+                  {/*kondisi image*/}
                   {message ? (
                     <p className="text-xm text-red-500">{message}</p>
                   ) : (
                     <p className="text-xs">
-                      {" "}
                       SVG, PNG, JPEG, GIF, or Others (max: 4MB)
                     </p>
                   )}
                 </div>
               )}
             </div>
-            {/* kondisi upload image */}
             {!image ? (
               <input
                 type="file"
@@ -172,40 +171,58 @@ const EditForm = ({
                 alt="image"
                 width={640}
                 height={360}
-                className="rounded-md absolute aspect-video
-              object-cover"
+                className="rounded-md absolute aspect-video object-cover"
               />
             )}
           </label>
+
+          {/* Capacity */}
           <div className="mb-4">
             <input
               type="text"
               name="capacity"
               defaultValue={room.Capacity}
-              className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
+              className="py-2 px-4 rounded-sm border border-gray-500 w-full text-gray-900"
               placeholder="Capacity.."
             />
-            <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">
-                {state?.error?.capacity}
-              </span>
-            </div>
+            <span className="text-sm text-red-500 mt-2">
+              {state?.error?.capacity}
+            </span>
           </div>
+          {/* Category */}
+          <div className="mb-4">
+            <select
+              name="categoryId"
+              defaultValue={room.categoryId ?? ""}
+              className="py-2 px-4 rounded-sm border border-gray-500 w-full text-gray-900"
+            >
+              <option value="">-- Select Category --</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <span className="text-sm text-red-500 mt-2">
+              {state?.error?.categoryId}
+            </span>
+          </div>
+
+          {/* Price */}
           <div className="mb-4">
             <input
               type="text"
               name="price"
               defaultValue={room.price}
-              className="py-2 px-4 rounded-sm border border-gray-500 w-full placeholder-gray-500 text-gray-900"
+              className="py-2 px-4 rounded-sm border border-gray-500 w-full text-gray-900"
               placeholder="Price.."
             />
-            <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">
-                {state?.error?.price}
-              </span>
-            </div>
+            <span className="text-sm text-red-500 mt-2">
+              {state?.error?.price}
+            </span>
           </div>
-          {/* general message */}
+
+          {/* General Message */}
           {state?.message ? (
             <div className="mb-4 bg-red-200 p-2">
               <span className="text-sm text-gray-700 mt-2">
@@ -213,6 +230,8 @@ const EditForm = ({
               </span>
             </div>
           ) : null}
+
+          {/* Submit */}
           <button
             type="submit"
             className={clsx(

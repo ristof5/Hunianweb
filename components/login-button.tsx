@@ -1,11 +1,11 @@
 import { signIn } from "@/auth";
 import { FaG } from "react-icons/fa6";
 
-export const LoginGoogleButton = () => {
+export const LoginGoogleButton = ({redirectUrl}: {redirectUrl: string}) => {
   return (
     <form action={async () => {
         "use server";
-        await signIn("google");
+        await signIn("google", {redirectTo: redirectUrl});
     }}>
       <button
         className="flex items-center justify-center gap2 w-full bg-blue-700 text-white 

@@ -4,12 +4,12 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: 'Update Room & Property - Hunian',
-    
-}
+  title: "Update Room & Property - Hunian",
+};
 
-const UpdateRoomPage = ({ params }: { params: { id: string } }) => {
-  const roomId = params.id;
+const UpdateRoomPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params; // ⬅️ params harus di-await
+  const roomId = id;
 
   if (!roomId) return notFound();
 
