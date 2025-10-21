@@ -2,7 +2,7 @@ import { getReservations } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
-import { DeleteButton, EditButton } from "@/components/admin/room/button";
+
 
 const ReservationList = async () => {
   const reservations = await getReservations();
