@@ -31,12 +31,14 @@ const RoomDetail = async ({ roomId }: { roomId: string }) => {
           Amenities:
         </h5>
         <div className="grid md:grid-cols-3">
-          {room.RoomAmenities.map((item) => (
-            <div className="text-black flex gap-1 py-1" key={item.id}>
-              <IoCheckmark className=" size-5" />
-              <span>{item.Amenities.name}</span>
-            </div>
-          ))}
+          {room.RoomAmenities.map(
+            (item: { id: string; Amenities: { name: string } }) => (
+              <div className="text-black flex gap-1 py-1" key={item.id}>
+                <IoCheckmark className="size-5" />
+                <span>{item.Amenities.name}</span>
+              </div>
+            )
+          )}
         </div>
       </div>
       <div className="md:col-span-4">
@@ -56,7 +58,7 @@ const RoomDetail = async ({ roomId }: { roomId: string }) => {
             </div>
           </div>
           {/* Reservation Form */}
-          <ReserveForm room={room} disabledDate={disabledDate}/>
+          <ReserveForm room={room} disabledDate={disabledDate} />
         </div>
       </div>
     </div>
