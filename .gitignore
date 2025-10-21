@@ -33,6 +33,8 @@ prisma/.env
 node_modules/.prisma/
 .prisma/
 prisma/client/
+/app/generated
+
 
 # Database files (local/dev)
 *.sqlite
