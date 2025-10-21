@@ -2,6 +2,7 @@
 
 import { ContactSchema, RoomSchema, ReserveSchema } from "@/lib/zod";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
@@ -177,36 +178,34 @@ export const createReserve = async (
 
   let reservationId;
   try {
-    await prisma.$transaction(async (tx) => {
+   await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await tx.user.update({
-        data: {
-          name,
-          phone,
-        },
+        data: { name, phone },
         where: { id: session.user.id },
       });
+
       const reservation = await tx.reservation.create({
         data: {
-          startDate: startDate,
-          endDate: endDate,
-          price: price,
-          roomId: roomId,
+          startDate,
+          endDate,
+          price,
+          roomId,
           userId: session.user.id as string,
           Payment: {
-            create: [
-              {
-                amount: total, //ada kolom method di payment
-              },
-            ],
+            create: [{ amount: total }],
           },
         },
       });
+
       reservationId = reservation.id;
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error creating reservation:", error);
   }
-  redirect(`/checkout/${reservationId}`);
+
+  if (reservationId) {
+    redirect(`/checkout/${reservationId}`);
+  }
 };
 
 // delete room
