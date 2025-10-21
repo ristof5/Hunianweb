@@ -42,7 +42,7 @@ const MyReserveList = async () => {
             className="bg-white shadow-md rounded-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow"
           >
             {/* Header */}
-            <div className="flex items-center justify-between bg-gray-50 px-4 py-2 border-b border-gray-200">
+            <div className="flex items-center justify-between bg-gray-50 px-4 py-2 border-b border-gray-200"> 
               <h1 className="text-sm font-semibold text-gray-800">
                 Reservation ID: #{item.id}
               </h1>
