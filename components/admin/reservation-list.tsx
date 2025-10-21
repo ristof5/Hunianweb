@@ -3,10 +3,35 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
+type Room = {
+  name: string;
+  image: string;
+};
 
-const ReservationList = async () => {
-  const reservations = await getReservations();
+type User = {
+  name: string;
+};
+
+type Payment = {
+  status: string;
+};
+
+type Reservation = {
+  id: string;
+  startDate: Date;
+  endDate: Date;
+  createdAt: Date;
+  price: number;
+  Room: Room;
+  User: User;
+  Payment?: Payment[];
+};
+
+const ReservationList = async (): Promise<React.ReactElement> => {
+  const reservations = (await getReservations()) as Reservation[] | null;
+
   if (!reservations?.length) return <p>No Reservations Found</p>;
+
   return (
     <div className="bg-white p-4 mt-5 shadow-sm">
       <table className="w-full divide-y divide-gray-200">
@@ -39,7 +64,7 @@ const ReservationList = async () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 text-gray-900">
-          {reservations.map((reserve) => (
+          {reservations.map((reserve: Reservation) => (
             <tr key={reserve.id} className="hover:bg-gray-200">
               <td className="px-6 py-4">
                 <div className="h-20 w-32 relative">
@@ -65,7 +90,7 @@ const ReservationList = async () => {
                 {formatDate(reserve.createdAt.toISOString())}
               </td>
               <td className="px-6 py-4 text-right">
-                <span>{reserve.Payment[0]?.status}</span>
+                <span>{reserve.Payment?.[0]?.status ?? "—"}</span>
               </td>
             </tr>
           ))}
