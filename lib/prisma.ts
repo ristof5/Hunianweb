@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/app/generated/prisma" // pastikan import ke generated prisma
+import { PrismaClient } from "@prisma/client" // gunakan paket @prisma/client sebagai client prisma
  
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
  
