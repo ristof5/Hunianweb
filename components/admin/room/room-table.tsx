@@ -13,7 +13,7 @@ type Room = {
 };
 
 const RoomTable = async () => {
-  const rooms = await getRooms();
+  const rooms: Room[] = (await getRooms()) ?? [];
   if (!rooms?.length) return <p>No Room Found</p>;
   return (
     <div className="bg-white p-4 mt-5 shadow-sm">
