@@ -4,6 +4,14 @@ import Image from "next/image";
 import React from "react";
 import { DeleteButton, EditButton } from "@/components/admin/room/button";
 
+type Room = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  createdAt: string | Date;
+};
+
 const RoomTable = async () => {
   const rooms = await getRooms();
   if (!rooms?.length) return <p>No Room Found</p>;
